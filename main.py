@@ -9,6 +9,7 @@ PORT = 11333
 listener.bind((IP,PORT))
 listener.listen(0)
 
+
 #connection, address = listener.accept()
 
 #connection.send("Подключение успешно!".encode('utf8'))
@@ -16,7 +17,7 @@ listener.listen(0)
 while True:
     connection, address = listener.accept()
     connection.send("Successfull".encode('utf8'))
-    request = connection.recv(1024).decode("utf8").split(' ')
+    request = connection.recv(1024).decode('utf-8').split(" ")
     answer = RequestHandling(request)
     connection.send(answer.encode('utf8'))
     connection.close()
