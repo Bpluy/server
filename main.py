@@ -3,7 +3,7 @@ from functions import *
 
 listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1)
-IP = '91.224.87.35'
+IP = '0.0.0.0'
 print(IP)
 PORT = 11333
 listener.bind((IP,PORT))
