@@ -2,11 +2,12 @@ import socket
 import base64
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding
 from functions import *
 
 listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listener.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR, 1)
-IP = "0.0.0.0"
+IP = socket.gethostbyname(socket.gethostname())
 print(IP)
 PORT = 11333
 listener.bind((IP,PORT))
@@ -20,6 +21,8 @@ def decrypt_string(cipher_text):
     cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
     decryptor = cipher.decryptor()
     plain_text = decryptor.update(cipher_text) + decryptor.finalize()
+    unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
+    plain_text = unpadder.update(plain_text) + unpadder.finalize()
     return plain_text.decode('utf-8')
 
 #connection, address = listener.accept()
