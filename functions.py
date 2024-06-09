@@ -121,7 +121,7 @@ def RequestHandling(request):
                             cursor.execute('UPDATE slots SET isActive = (?) WHERE slotID = (?)', (1,slotID,))
                             connection.commit()
                             connection.close()
-                            return token
+                            return f"{token}"
                         else:
                             connection.close()
                             return "Not enough money"
