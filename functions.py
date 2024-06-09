@@ -41,6 +41,12 @@ def RequestHandling(request):
                     connection.commit()
                     connection.close()
                     return f"{state}"
+                case "checkBalance":
+                    cursor.execute('SELECT balance, tokens FROM main WHERE login = (?)', (arg,))
+                    balance = cursor.fetchone()
+                    message = f"{balance[0]} {balance[1]}"
+                    connection.close()
+                    return message
         case 3:
             command = request[0]
             login = request[1]
@@ -107,15 +113,15 @@ def RequestHandling(request):
                             message = encrypt_string(f"{login}")
                             con.send(message.encode('utf8'))
                             rd = con.recv(1024).decode('utf8')
-                            tokens = int(rd)
+                            token = int(rd)
                             cursor.execute('SELECT tokens FROM main WHERE login = (?)', (login,))
-                            tokens += cursor.fetchone()[0]
+                            tokens = token + cursor.fetchone()[0]
                             cursor.execute('UPDATE main SET tokens = (?) WHERE login = (?)', (tokens,login,))
                             connection.commit()
                             cursor.execute('UPDATE slots SET isActive = (?) WHERE slotID = (?)', (1,slotID,))
                             connection.commit()
                             connection.close()
-                            return "Successful"
+                            return token
                         else:
                             connection.close()
                             return "Not enough money"
