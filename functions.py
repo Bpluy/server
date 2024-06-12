@@ -89,6 +89,8 @@ def RequestHandling(request):
                 case "spendTokens":
                     cursor.execute('SELECT tokens FROM main WHERE login = (?)',(login, ))
                     tokens = cursor.fetchone()[0]
+                    if tokens == None:
+                        return "Incorrect login"
                     if tokens < int(arg):
                         return f"Not enough tokens;{tokens}"
                     tokens -= int(arg)
