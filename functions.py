@@ -47,6 +47,11 @@ def RequestHandling(request):
                     message = f"{balance[0]} {balance[1]}"
                     connection.close()
                     return message
+                case "checkSlotName":
+                    cursor.execute('SELECT name FROM slots WHERE slotID = (?)', (arg,))
+                    name = cursor.fetchone()[0]
+                    connection.close()
+                    return name
         case 3:
             command = request[0]
             login = request[1]
@@ -128,20 +133,21 @@ def RequestHandling(request):
                     else:
                         connection.close()
                         return "Slot is busy or disabled"
-        case 4:
+        case 5:
             command = request[0]
-            args = [request[1], request[2], request[3]]
+            args = [request[1], request[2], request[3], request[4]]
 
             match(command):
                 case 'initSlot':
                     slotID = args[0]
                     isActive = int(args[1])
                     price = int(args[2])
+                    name = args[3]
                     cursor.execute('SELECT * FROM slots WHERE slotID = (?)', (slotID,))
                     rows = cursor.fetchone()
                     if rows != None:
                         return "0"
-                    cursor.execute('INSERT INTO slots (slotID, isActive, price) VALUES (?, ?, ?)', (slotID,isActive,price,))
+                    cursor.execute('INSERT INTO slots (slotID, isActive, price, name) VALUES (?, ?, ?, ?)', (slotID,isActive,price,name,))
                     connection.commit()
                     connection.close()
                     return "1"
