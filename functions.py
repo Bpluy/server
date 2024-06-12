@@ -89,6 +89,8 @@ def RequestHandling(request):
                 case "spendTokens":
                     cursor.execute('SELECT tokens FROM main WHERE login = (?)',(login, ))
                     tokens = cursor.fetchone()[0]
+                    if tokens < int(arg):
+                        return f"Not enough tokens;{tokens}"
                     tokens -= int(arg)
                     cursor.execute('UPDATE main SET tokens = ? WHERE login = ?', (tokens, login))
                     balance = f"{GetBalance(login, cursor)[0]} {GetBalance(login, cursor)[1]}"
