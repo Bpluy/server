@@ -86,6 +86,15 @@ def RequestHandling(request):
                     connection.commit()
                     connection.close()
                     return balance
+                case "spendTokens":
+                    cursor.execute('SELECT tokens FROM main WHERE login = (?)',(login, ))
+                    tokens = cursor.fetchone()[0]
+                    tokens -= int(arg)
+                    cursor.execute('UPDATE main SET tokens = ? WHERE login = ?', (tokens, login))
+                    balance = f"{GetBalance(login, cursor)[0]} {GetBalance(login, cursor)[1]}"
+                    connection.commit()
+                    connection.close()
+                    return balance
                 case "addBalance":
                     cursor.execute('SELECT balance FROM main WHERE login = (?)',(login, ))
                     balance = cursor.fetchone()
